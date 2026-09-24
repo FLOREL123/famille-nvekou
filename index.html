@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+    <meta name="description" content="Site officiel de la famille N'VEKOUNOU - Plaquette familiale, arbre généalogique et événements" />
+    
+    <title>Famille N'VEKOUNOU</title>
+
+    <!-- ============ PWA ============ -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#8B0000" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    
+    <!-- iOS PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="N'VEKOUNOU" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/icons/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/icon-192.png" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/icon-192.png" />
+
+    <!-- ============ STYLES ============ -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+    <!-- ============ NAVIGATION ============ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="assets/images/logo.png" alt="Logo N'VEKOUNOU" />
+                <span>Famille N'VEKOUNOU</span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="#accueil" class="active" data-page="accueil">Accueil</a>
+                <a href="#plaquette" data-page="plaquette">Plaquette</a>
+                <a href="#apropos" data-page="apropos">À Propos</a>
+                <a href="#arbre" data-page="arbre">Arbre Généalogique</a>
+            </div>
+            <div class="nav-auth">
+                <button type="button" class="btn btn-login" id="loginBtn">Connexion</button>
+                <button type="button" class="btn btn-register" id="registerBtn">Inscription</button>
+                <button type="button" class="btn btn-logout" id="logoutBtn" style="display:none;">Déconnexion</button>
+            </div>
+            <div class="hamburger" id="hamburger" role="button" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============ PAGE ACCUEIL ============ -->
+    <section id="page-accueil" class="page active">
+        <div class="admin-access">
+            <button type="button" class="btn btn-admin" id="adminAccessBtn">
+                <i class="fas fa-shield-alt"></i> <span>Admin</span>
+            </button>
+        </div>
+
+        <!-- Carousel principal -->
+        <div class="hero-carousel">
+            <div class="carousel-container" id="heroCarousel">
+                <div class="carousel-slide">
+                    <img src="assets/images/famille1.jpeg" alt="Famille N'VEKOUNOU 1" data-fallback="Famille N'VEKOUNOU" />
+                </div>
+                <div class="carousel-slide">
+                    <img src="assets/images/famille2.jpeg" alt="Famille N'VEKOUNOU 2" data-fallback="Famille N'VEKOUNOU" />
+                </div>
+                <div class="carousel-slide">
+                    <img src="assets/images/famille3.jpeg" alt="Famille N'VEKOUNOU 3" data-fallback="Famille N'VEKOUNOU" />
+                </div>
+            </div>
+            <button type="button" class="carousel-btn prev" id="heroPrev" aria-label="Précédent">❮</button>
+            <button type="button" class="carousel-btn next" id="heroNext" aria-label="Suivant">❯</button>
+            <div class="carousel-dots" id="heroDots"></div>
+        </div>
+
+        <!-- Section Souvenirs -->
+        <div class="souvenirs-section">
+            <div class="souvenirs-header">
+                <h2><i class="fas fa-book-open"></i> Souvenirs de la Famille</h2>
+                <p class="souvenirs-subtitle">Photos et vidéos des moments passés ensemble</p>
+            </div>
+
+            <div class="souvenirs-filters">
+                <button type="button" class="filter-btn active" data-filter="all">Tout</button>
+                <button type="button" class="filter-btn" data-filter="photo">Photos</button>
+                <button type="button" class="filter-btn" data-filter="video">Vidéos</button>
+            </div>
+
+            <div class="souvenirs-gallery" id="souvenirsGallery"></div>
+        </div>
+    </section>
+
+    <!-- ============ PAGE PLAQUETTE ============ -->
+    <section id="page-plaquette" class="page">
+        <div class="plaquette-container">
+            <div class="profile-card" id="userProfileCard">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <img src="assets/images/default-avatar.png" alt="Avatar" id="userAvatar" />
+                        <button type="button" class="btn btn-upload-photo" id="uploadPhotoBtn" title="Changer la photo">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                        <input type="file" id="photoUpload" accept="image/*" style="display:none;" />
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="userFullName">Nom Prénom</h2>
+                        <p class="position" id="userPosition">Membre</p>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-item"><i class="fas fa-calendar-alt"></i><span>Date de naissance: <strong id="userBirthdate">--</strong></span></div>
+                    <div class="detail-item"><i class="fas fa-map-marker-alt"></i><span>Lieu de vie: <strong id="userLocation">--</strong></span></div>
+                    <div class="detail-item"><i class="fas fa-briefcase"></i><span>Métier: <strong id="userJob">--</strong></span></div>
+                    <div class="detail-item"><i class="fas fa-phone"></i><span>Téléphone: <strong id="userPhone">--</strong></span></div>
+                    <div class="detail-item"><i class="fas fa-male"></i><span>Père: <strong id="userFather">--</strong></span></div>
+                    <div class="detail-item"><i class="fas fa-female"></i><span>Mère: <strong id="userMother">--</strong></span></div>
+                    <div class="detail-item"><i class="fas fa-child"></i><span>Enfants: <strong id="userChildren">--</strong></span></div>
+                    <div class="detail-item"><i class="fas fa-user-friends"></i><span>Position: <strong id="userPositionDetail">--</strong></span></div>
+                    <div class="detail-item" id="intronisationDisplay" style="display:none;">
+                        <i class="fas fa-crown"></i><span>Date d'intronisation: <strong id="userIntronisation">--</strong></span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button type="button" class="btn btn-primary" id="generatePdfBtn"><i class="fas fa-file-pdf"></i> Télécharger PDF</button>
+                    <button type="button" class="btn btn-secondary" id="editProfileBtn"><i class="fas fa-edit"></i> Modifier</button>
+                </div>
+            </div>
+
+            <div class="events-section">
+                <h3><i class="fas fa-calendar-check"></i> Événements</h3>
+                <div class="events-tabs">
+                    <button type="button" class="tab-btn active" data-tab="passe">Passés</button>
+                    <button type="button" class="tab-btn" data-tab="futur">À venir</button>
+                </div>
+                <div class="events-list" id="eventsList"></div>
+            </div>
+
+            <div class="members-section">
+                <h3><i class="fas fa-users"></i> Membres de la Famille</h3>
+                <div class="search-bar">
+                    <input type="text" id="memberSearch" placeholder="Rechercher un membre par nom ou métier..." />
+                    <button type="button" class="btn btn-search"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="members-grid" id="membersGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ PAGE À PROPOS ============ -->
+    <section id="page-apropos" class="page">
+        <div class="apropos-container">
+            <h2>À Propos de la Famille N'VEKOUNOU</h2>
+            <div class="events-archive">
+                <h3><i class="fas fa-archive"></i> Événements Passés</h3>
+                <div class="archive-grid" id="archiveGrid"></div>
+            </div>
+            <div class="events-upcoming">
+                <h3><i class="fas fa-calendar-plus"></i> Événements à Venir</h3>
+                <div class="upcoming-list" id="upcomingList"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ PAGE ARBRE GÉNÉALOGIQUE ============ -->
+    <section id="page-arbre" class="page">
+        <div class="arbre-container">
+            <h2><i class="fas fa-sitemap"></i> Arbre Généalogique</h2>
+            <div id="treeContainer">
+                <p class="loading-text">Chargement de l'arbre généalogique...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ PAGE ADMIN ============ -->
+    <section id="page-admin" class="page">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h2><i class="fas fa-shield-alt"></i> Panel Administrateur</h2>
+                <button type="button" class="btn btn-secondary" id="adminExitBtn">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion admin
+                </button>
+            </div>
+
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-info"><span class="stat-number" id="totalMembers">0</span><span class="stat-label">Membres</span></div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-calendar-check"></i>
+                    <div class="stat-info"><span class="stat-number" id="totalEvents">0</span><span class="stat-label">Événements</span></div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-trophy"></i>
+                    <div class="stat-info"><span class="stat-number" id="totalPositions">0</span><span class="stat-label">Positions occupées</span></div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-coins"></i>
+                    <div class="stat-info"><span class="stat-number" id="totalDons">0</span><span class="stat-label">Dons collectés</span></div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h3><i class="fas fa-calendar-plus"></i> Gestion des Événements</h3>
+                <button type="button" class="btn btn-primary" id="addEventBtn"><i class="fas fa-plus"></i> Ajouter un événement</button>
+                <div class="admin-events-list" id="adminEventsList"></div>
+            </div>
+
+            <div class="admin-section">
+                <h3><i class="fas fa-user-cog"></i> Gestion des Membres</h3>
+                <button type="button" class="btn btn-primary" id="addMemberBtn"><i class="fas fa-user-plus"></i> Ajouter un membre</button>
+                <div class="admin-members-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Position</th>
+                                <th>Téléphone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminMembersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ MODALES ============ -->
+
+    <!-- Connexion Admin -->
+    <div class="modal" id="adminLoginModal">
+        <div class="modal-content modal-small">
+            <span class="close-modal" id="closeAdminLogin" role="button" aria-label="Fermer">&times;</span>
+            <div class="modal-icon"><i class="fas fa-shield-alt"></i></div>
+            <h2>Accès Administrateur</h2>
+            <p class="modal-subtitle">Entrez le mot de passe administrateur</p>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminPassword">Mot de passe</label>
+                    <input type="password" id="adminPassword" placeholder="Entrez le mot de passe" required autocomplete="current-password" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-full"><i class="fas fa-unlock"></i> Accéder</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Inscription -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeRegister" role="button" aria-label="Fermer">&times;</span>
+            <h2>Inscription</h2>
+            <form id="registerForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="regPhoto">Photo de profil</label>
+                    <input type="file" id="regPhoto" accept="image/*" />
+                </div>
+                <div class="form-group">
+                    <label for="regFamilyName">Nom de famille *</label>
+                    <input type="text" id="regFamilyName" value="N'VEKOUNOU" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="regFirstName">Prénom *</label>
+                    <input type="text" id="regFirstName" required placeholder="Votre prénom" />
+                </div>
+                <div class="form-group">
+                    <label for="regFather">Nom du Père *</label>
+                    <input type="text" id="regFather" required placeholder="Nom du père" />
+                </div>
+                <div class="form-group">
+                    <label for="regMother">Nom de la Mère *</label>
+                    <input type="text" id="regMother" required placeholder="Nom de la mère" />
+                </div>
+                <div class="form-group">
+                    <label for="regChildren">Nom des Enfants</label>
+                    <input type="text" id="regChildren" placeholder="Séparés par des virgules" />
+                </div>
+                <div class="form-group">
+                    <label for="regSpouse">Nom du Conjoint(e)</label>
+                    <input type="text" id="regSpouse" placeholder="Nom du conjoint" />
+                </div>
+                <div class="form-group">
+                    <label for="regBirthdate">Date de naissance *</label>
+                    <input type="date" id="regBirthdate" required />
+                </div>
+                <div class="form-group">
+                    <label for="regAge">Âge *</label>
+                    <input type="number" id="regAge" required placeholder="Votre âge" min="1" max="120" />
+                </div>
+                <div class="form-group">
+                    <label for="regJob">Métier</label>
+                    <input type="text" id="regJob" placeholder="Votre métier" />
+                </div>
+                <div class="form-group">
+                    <label for="regLocation">Lieu de vie *</label>
+                    <input type="text" id="regLocation" required placeholder="Votre ville" />
+                </div>
+                <div class="form-group">
+                    <label for="regPhone">Téléphone *</label>
+                    <input type="tel" id="regPhone" required placeholder="Votre numéro" />
+                </div>
+                <div class="form-group">
+                    <label for="regPosition">Position dans la famille *</label>
+                    <select id="regPosition" required>
+                        <option value="membre">Membre</option>
+                        <option value="dah">Dah</option>
+                        <option value="baba_kouboulo">Baba KOUBOULOU</option>
+                        <option value="vigan">Vigan</option>
+                        <option value="saranon">Saranon</option>
+                        <option value="tangnis">Tangnis</option>
+                        <option value="tangno">Tangno</option>
+                        <option value="otoun">Otoun</option>
+                        <option value="adjanan">ADJANAN</option>
+                    </select>
+                </div>
+                <div class="form-group" id="intronisationGroup" style="display:none;">
+                    <label for="regIntronisation">Date d'intronisation *</label>
+                    <input type="date" id="regIntronisation" />
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email *</label>
+                    <input type="email" id="regEmail" required placeholder="votre@email.com" autocomplete="email" />
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Mot de passe *</label>
+                    <input type="password" id="regPassword" required placeholder="Votre mot de passe" minlength="6" autocomplete="new-password" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">S'inscrire</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Connexion -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeLogin" role="button" aria-label="Fermer">&times;</span>
+            <h2>Connexion</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required placeholder="votre@email.com" autocomplete="email" />
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <input type="password" id="loginPassword" required placeholder="Votre mot de passe" autocomplete="current-password" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Se connecter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modification Profil Utilisateur -->
+    <div class="modal" id="editProfileModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeEdit" role="button" aria-label="Fermer">&times;</span>
+            <h2>Modifier mon profil</h2>
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label for="editPhoto">Photo de profil</label>
+                    <input type="file" id="editPhoto" accept="image/*" />
+                </div>
+                <div class="form-group">
+                    <label for="editFirstName">Prénom</label>
+                    <input type="text" id="editFirstName" placeholder="Votre prénom" />
+                </div>
+                <div class="form-group">
+                    <label for="editFather">Nom du Père</label>
+                    <input type="text" id="editFather" placeholder="Nom du père" />
+                </div>
+                <div class="form-group">
+                    <label for="editMother">Nom de la Mère</label>
+                    <input type="text" id="editMother" placeholder="Nom de la mère" />
+                </div>
+                <div class="form-group">
+                    <label for="editJob">Métier</label>
+                    <input type="text" id="editJob" placeholder="Votre métier" />
+                </div>
+                <div class="form-group">
+                    <label for="editLocation">Lieu de vie</label>
+                    <input type="text" id="editLocation" placeholder="Votre ville" />
+                </div>
+                <div class="form-group">
+                    <label for="editPhone">Téléphone</label>
+                    <input type="tel" id="editPhone" placeholder="Votre numéro" />
+                </div>
+                <div class="form-group">
+                    <label for="editChildren">Nom des Enfants</label>
+                    <input type="text" id="editChildren" placeholder="Séparés par des virgules" />
+                </div>
+                <div class="form-group">
+                    <label for="editSpouse">Nom du Conjoint(e)</label>
+                    <input type="text" id="editSpouse" placeholder="Nom du conjoint" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ajout Événement -->
+    <div class="modal" id="addEventModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeEventModal" role="button" aria-label="Fermer">&times;</span>
+            <h2>Ajouter un Événement</h2>
+            <form id="addEventForm">
+                <div class="form-group">
+                    <label for="eventTitle">Titre de l'événement *</label>
+                    <input type="text" id="eventTitle" required placeholder="Titre de l'événement" />
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Date *</label>
+                    <input type="date" id="eventDate" required />
+                </div>
+                <div class="form-group">
+                    <label for="eventLocation">Lieu</label>
+                    <input type="text" id="eventLocation" placeholder="Lieu de l'événement" />
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Description</label>
+                    <textarea id="eventDescription" rows="3" placeholder="Description de l'événement"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="eventAmount">Montant de participation (FCFA)</label>
+                    <input type="number" id="eventAmount" placeholder="Montant" min="0" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Créer l'événement</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Gestion Paiements -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content modal-large">
+            <span class="close-modal" id="closePaymentModal" role="button" aria-label="Fermer">&times;</span>
+            <h2 id="paymentModalTitle">Gestion des Paiements</h2>
+            <div class="payment-summary" id="paymentSummary"></div>
+            <div class="payment-list" id="paymentList"></div>
+        </div>
+    </div>
+
+    <!-- Description du Don -->
+    <div class="modal" id="donationModal">
+        <div class="modal-content modal-small">
+            <span class="close-modal" id="closeDonationModal" role="button" aria-label="Fermer">&times;</span>
+            <h2 id="donationModalTitle">Décrire le don</h2>
+            <form id="donationForm">
+                <div class="form-group">
+                    <label for="donationDescription">Description du don *</label>
+                    <textarea id="donationDescription" rows="4" placeholder="Ex: 2 sacs de riz, 50000 FCFA, habits..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="donationAmount">Montant (FCFA) - optionnel</label>
+                    <input type="number" id="donationAmount" placeholder="Montant en FCFA" min="0" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-full"><i class="fas fa-gift"></i> Enregistrer le don</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Voir Don -->
+    <div class="modal" id="donationViewModal">
+        <div class="modal-content modal-small">
+            <span class="close-modal" id="closeDonationView" role="button" aria-label="Fermer">&times;</span>
+            <div class="modal-icon" style="color:#f39c12;"><i class="fas fa-gift"></i></div>
+            <h2>Détail du Don</h2>
+            <div id="donationViewContent"></div>
+        </div>
+    </div>
+
+    <!-- Ajout Membre -->
+    <div class="modal" id="addMemberModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeAddMemberModal" role="button" aria-label="Fermer">&times;</span>
+            <h2>Ajouter un Membre</h2>
+            <form id="addMemberForm">
+                <div class="form-group">
+                    <label for="addMemberPhoto">Photo de profil</label>
+                    <input type="file" id="addMemberPhoto" accept="image/*" />
+                </div>
+                <div class="form-group">
+                    <label for="addMemberFirstName">Prénom *</label>
+                    <input type="text" id="addMemberFirstName" required placeholder="Prénom" />
+                </div>
+                <div class="form-group">
+                    <label for="addMemberFather">Nom du Père *</label>
+                    <input type="text" id="addMemberFather" required placeholder="Nom du père" />
+                </div>
+                <div class="form-group">
+                    <label for="addMemberMother">Nom de la Mère *</label>
+                    <input type="text" id="addMemberMother" required placeholder="Nom de la mère" />
+                </div>
+                <div class="form-group">
+                    <label for="addMemberBirthdate">Date de naissance *</label>
+                    <input type="date" id="addMemberBirthdate" required />
+                </div>
+                <div class="form-group">
+                    <label for="addMemberLocation">Lieu de vie *</label>
+                    <input type="text" id="addMemberLocation" required placeholder="Ville" />
+                </div>
+                <div class="form-group">
+                    <label for="addMemberPhone">Téléphone *</label>
+                    <input type="tel" id="addMemberPhone" required placeholder="Numéro" />
+                </div>
+                <div class="form-group">
+                    <label for="addMemberPosition">Position</label>
+                    <select id="addMemberPosition">
+                        <option value="membre">Membre</option>
+                        <option value="dah">Dah</option>
+                        <option value="baba_kouboulo">Baba KOUBOULOU</option>
+                        <option value="vigan">Vigan</option>
+                        <option value="saranon">Saranon</option>
+                        <option value="tangnis">Tangnis</option>
+                        <option value="tangno">Tangno</option>
+                        <option value="otoun">Otoun</option>
+                        <option value="adjanan">ADJANAN</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addMemberEmail">Email</label>
+                    <input type="email" id="addMemberEmail" placeholder="email@exemple.com" />
+                </div>
+                <div class="form-group">
+                    <label for="addMemberPassword">Mot de passe (par défaut)</label>
+                    <input type="password" id="addMemberPassword" placeholder="Laisser vide pour un mot de passe aléatoire" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Ajouter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modifier Membre (Admin) -->
+    <div class="modal" id="editMemberModal">
+        <div class="modal-content modal-large">
+            <span class="close-modal" id="closeEditMemberModal" role="button" aria-label="Fermer">&times;</span>
+            <h2><i class="fas fa-user-edit"></i> Modifier le Membre</h2>
+            <form id="editMemberForm">
+                <input type="hidden" id="editMemberId" />
+                <div class="form-group">
+                    <label for="editMemberPhoto">Photo de profil</label>
+                    <input type="file" id="editMemberPhoto" accept="image/*" />
+                    <img id="editMemberPhotoPreview" src="" alt="" style="max-width:80px;border-radius:50%;margin-top:8px;display:none;" />
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMemberFirstName">Prénom *</label>
+                        <input type="text" id="editMemberFirstName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editMemberFamilyName">Nom de famille</label>
+                        <input type="text" id="editMemberFamilyName" value="N'VEKOUNOU" readonly />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMemberFather">Nom du Père</label>
+                        <input type="text" id="editMemberFather" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editMemberMother">Nom de la Mère</label>
+                        <input type="text" id="editMemberMother" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMemberBirthdate">Date de naissance</label>
+                        <input type="date" id="editMemberBirthdate" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editMemberAge">Âge</label>
+                        <input type="number" id="editMemberAge" min="1" max="120" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMemberJob">Métier</label>
+                        <input type="text" id="editMemberJob" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editMemberLocation">Lieu de vie</label>
+                        <input type="text" id="editMemberLocation" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMemberPhone">Téléphone</label>
+                        <input type="tel" id="editMemberPhone" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editMemberEmail">Email</label>
+                        <input type="email" id="editMemberEmail" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editMemberChildren">Nom des Enfants</label>
+                    <input type="text" id="editMemberChildren" placeholder="Séparés par des virgules" />
+                </div>
+                <div class="form-group">
+                    <label for="editMemberSpouse">Nom du Conjoint(e)</label>
+                    <input type="text" id="editMemberSpouse" />
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMemberPosition">Position</label>
+                        <select id="editMemberPosition">
+                            <option value="membre">Membre</option>
+                            <option value="dah">Dah</option>
+                            <option value="baba_kouboulo">Baba KOUBOULOU</option>
+                            <option value="vigan">Vigan</option>
+                            <option value="saranon">Saranon</option>
+                            <option value="tangnis">Tangnis</option>
+                            <option value="tangno">Tangno</option>
+                            <option value="otoun">Otoun</option>
+                            <option value="adjanan">ADJANAN</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editMemberIntronisation">Date d'intronisation</label>
+                        <input type="date" id="editMemberIntronisation" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editMemberStatus">Statut</label>
+                    <select id="editMemberStatus">
+                        <option value="vivant">Vivant</option>
+                        <option value="decede">Décédé</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full"><i class="fas fa-save"></i> Enregistrer les modifications</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Déclarer Décès -->
+    <div class="modal" id="declarDeathModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeDeathModal" role="button" aria-label="Fermer">&times;</span>
+            <h2>Déclarer le Décès</h2>
+            <p>Voulez-vous vraiment déclarer le décès de <strong id="deathMemberName"></strong> ?</p>
+            <p style="color:#8e44ad;margin-top:0.8rem;"><i class="fas fa-info-circle"></i> Le membre restera dans la liste et l'arbre généalogique. Sa position sera libérée.</p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="cancelDeathBtn">Annuler</button>
+                <button type="button" class="btn btn-danger" id="confirmDeathBtn">Confirmer le décès</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast" role="alert"></div>
+
+    <!-- ============ SCRIPTS ============ -->
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/admin.js"></script>
+
+    <!-- ============ PWA : Enregistrement du Service Worker ============ -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then((registration) => {
+                        console.log('✅ Service Worker enregistré:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('❌ Échec Service Worker:', error);
+                    });
+            });
+        }
+    </script>
+
+    <!-- ============ Installation PWA (Bannière) ============ -->
+    <script>
+        (function() {
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                setTimeout(() => {
+                    if (deferredPrompt && !localStorage.getItem('pwa-installed')) {
+                        const banner = document.createElement('div');
+                        banner.id = 'pwa-banner';
+                        banner.style.cssText = `
+                            position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+                            background:linear-gradient(135deg,#8B0000,#5C0000);color:white;
+                            padding:14px 24px;border-radius:50px;
+                            box-shadow:0 8px 30px rgba(0,0,0,0.3);z-index:9999;
+                            display:flex;align-items:center;gap:14px;
+                            font-family:Inter,sans-serif;cursor:pointer;
+                            max-width:90%;white-space:nowrap;
+                        `;
+                        banner.innerHTML = `
+                            <i class="fas fa-download" style="font-size:1.3rem;"></i>
+                            <span style="font-weight:500;">Installer l'application</span>
+                            <button type="button" style="background:none;border:none;color:white;font-size:1.4rem;cursor:pointer;padding:0;line-height:1;">&times;</button>
+                        `;
+                        
+                        banner.addEventListener('click', async (ev) => {
+                            if (ev.target.tagName === 'BUTTON') {
+                                banner.remove();
+                                return;
+                            }
+                            if (deferredPrompt) {
+                                deferredPrompt.prompt();
+                                const { outcome } = await deferredPrompt.userChoice;
+                                if (outcome === 'accepted') {
+                                    localStorage.setItem('pwa-installed', 'true');
+                                }
+                                deferredPrompt = null;
+                                banner.remove();
+                            }
+                        });
+                        document.body.appendChild(banner);
+                    }
+                }, 30000);
+            });
+
+            window.addEventListener('appinstalled', () => {
+                console.log('✅ PWA installée');
+                localStorage.setItem('pwa-installed', 'true');
+                const banner = document.getElementById('pwa-banner');
+                if (banner) banner.remove();
+            });
+        })();
+    </script>
+</body>
+</html>
