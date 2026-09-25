@@ -3,10 +3,9 @@
 // Version : mobile-safe + sans dépendance API externe
 // ============================================
 
-// ✅ PLUS DE localhost : tout est géré côté client
-// Quand tu auras un backend Python déployé, tu décommenteras la ligne ci-dessous
-// et tu mettras l'URL réelle (ex: https://famille-nvekou-api.onrender.com/api)
-// const API_URL = 'https://TON-BACKEND.onrender.com/api';
+// ⚠️ PLUS DE localhost — tout est géré côté client.
+// Quand tu auras un backend Python déployé, ajoute ici :
+// const API_URL = 'https://ton-backend.onrender.com/api';
 
 class Auth {
     constructor() {
@@ -17,7 +16,6 @@ class Auth {
         this.init();
     }
 
-    // ============ DÉTECTION DES CAPACITÉS ============
     checkStorage() {
         try {
             const test = '__storage_test__';
@@ -25,7 +23,7 @@ class Auth {
             localStorage.removeItem(test);
             return true;
         } catch (e) {
-            console.warn('⚠️ localStorage indisponible (navigation privée ?)');
+            console.warn('⚠️ localStorage indisponible');
             return false;
         }
     }
@@ -45,9 +43,7 @@ class Auth {
         try { localStorage.removeItem(key); } catch {}
     }
 
-    // ============ INITIALISATION ============
     init() {
-        // Récupérer la session sauvegardée
         this.token = this.safeGet('token');
         const savedUser = this.safeGet('currentUser');
         if (savedUser) {
@@ -55,37 +51,27 @@ class Auth {
                 this.currentUser = JSON.parse(savedUser);
                 this.updateUI(true);
             } catch (e) {
-                console.warn('⚠️ Session corrompue, réinitialisation');
                 this.logout();
             }
         }
 
-        // ✅ EVENT DELEGATION GLOBALE (robuste sur mobile)
         document.addEventListener('click', (e) => this.handleGlobalClick(e));
         document.addEventListener('submit', (e) => this.handleGlobalSubmit(e));
 
-        // Position select
         document.addEventListener('change', (e) => {
             if (e.target.id === 'regPosition') {
                 this.toggleIntronisation(e.target.value);
             }
         });
 
-        // Fermer les modales en cliquant à l'extérieur
         document.addEventListener('click', (e) => {
             if (e.target.classList && e.target.classList.contains('modal')) {
                 e.target.classList.remove('show');
                 document.body.classList.remove('modal-open');
             }
         });
-
-        // Diagnostic mobile
-        if (this.isMobile) {
-            this.logDiagnostic();
-        }
     }
 
-    // ============ EVENT DELEGATION ============
     handleGlobalClick(e) {
         const target = e.target.closest('[id]');
         if (!target) return;
@@ -95,7 +81,6 @@ class Auth {
             case 'loginBtn':      e.preventDefault(); this.openModal('login'); break;
             case 'registerBtn':   e.preventDefault(); this.openModal('register'); break;
             case 'logoutBtn':     e.preventDefault(); this.logout(); break;
-            
             case 'closeLogin':
             case 'closeRegister':
             case 'closeEdit':
@@ -117,11 +102,10 @@ class Auth {
     handleGlobalSubmit(e) {
         const formId = e.target.id;
         const handlers = {
-            'loginForm':     (ev) => this.handleLogin(ev),
-            'registerForm':  (ev) => this.handleRegister(ev),
+            'loginForm':      (ev) => this.handleLogin(ev),
+            'registerForm':   (ev) => this.handleRegister(ev),
             'adminLoginForm': () => { if (window.admin) window.admin.handleAdminLogin(); }
         };
-
         if (handlers[formId]) {
             e.preventDefault();
             e.stopPropagation();
@@ -162,7 +146,6 @@ class Auth {
         if (input) input.required = show;
     }
 
-    // ============ MODALES ============
     openModal(type) {
         const modalId = type === 'login' ? 'loginModal' : 'registerModal';
         const modal = document.getElementById(modalId);
@@ -183,11 +166,8 @@ class Auth {
         document.body.classList.remove('modal-open');
     }
 
-    // ============ LOGIN (sans backend) ============
     async handleLogin(e) {
         if (e) e.preventDefault();
-        console.log('🔐 Tentative de connexion...');
-
         const emailEl = document.getElementById('loginEmail');
         const passwordEl = document.getElementById('loginPassword');
         if (!emailEl || !passwordEl) return;
@@ -199,7 +179,6 @@ class Auth {
         if (!password) { this.showToast('Veuillez entrer votre mot de passe', 'error'); passwordEl.focus(); return; }
 
         try {
-            // 🔹 Simulation locale (à remplacer plus tard par un appel API)
             const user = {
                 id: 1,
                 firstName: 'Koffi',
@@ -220,33 +199,22 @@ class Auth {
             };
 
             this.token = 'token_' + Date.now();
-            const saved = this.safeSet('token', this.token);
+            this.safeSet('token', this.token);
             this.safeSet('currentUser', JSON.stringify(user));
-
-            if (!saved) {
-                this.showToast('Connexion OK (session non persistante en mode privé)', 'info');
-            }
-
             this.currentUser = user;
             this.updateUI(true);
             this.closeModal('login');
             this.showToast('Connexion réussie !', 'success');
-
             const form = document.getElementById('loginForm');
             if (form) form.reset();
-
-            console.log('✅ Connexion réussie pour', email);
         } catch (error) {
-            console.error('❌ Erreur de connexion:', error);
+            console.error(error);
             this.showToast('Erreur de connexion', 'error');
         }
     }
 
-    // ============ INSCRIPTION (sans backend) ============
     async handleRegister(e) {
         if (e) e.preventDefault();
-        console.log('📝 Tentative d\'inscription...');
-
         const get = (id) => document.getElementById(id);
         const familyName = get('regFamilyName')?.value || '';
         const firstName  = get('regFirstName')?.value.trim() || '';
@@ -259,7 +227,6 @@ class Auth {
         const email      = get('regEmail')?.value.trim() || '';
         const password   = get('regPassword')?.value || '';
 
-        // Validations
         const errors = [];
         if (familyName.toUpperCase().replace(/['\s]/g, '') !== 'NVEKOUNOU') errors.push("Le nom de famille doit être N'VEKOUNOU");
         if (!firstName) errors.push('Le prénom est obligatoire');
@@ -273,13 +240,11 @@ class Auth {
         if (password.length < 6) errors.push('Le mot de passe doit contenir au moins 6 caractères');
 
         if (errors.length > 0) {
-            console.warn('❌ Erreurs de validation:', errors);
             this.showToast(errors[0], 'error');
             return;
         }
 
         try {
-            // 🔹 Simulation : enregistrer dans un "registre" local
             const users = JSON.parse(this.safeGet('allUsers') || '[]');
             users.push({
                 id: Date.now(),
@@ -291,10 +256,8 @@ class Auth {
             });
             this.safeSet('allUsers', JSON.stringify(users));
 
-            console.log('✅ Inscription validée pour', firstName);
             this.showToast('Inscription réussie ! Connectez-vous maintenant.', 'success');
             this.closeModal('register');
-
             const form = document.getElementById('registerForm');
             if (form) form.reset();
 
@@ -304,12 +267,11 @@ class Auth {
                 if (loginEmail) loginEmail.value = email;
             }, 700);
         } catch (error) {
-            console.error('❌ Erreur d\'inscription:', error);
+            console.error(error);
             this.showToast("Erreur lors de l'inscription", 'error');
         }
     }
 
-    // ============ LOGOUT ============
     logout() {
         this.token = null;
         this.currentUser = null;
@@ -319,7 +281,6 @@ class Auth {
         this.showToast('Déconnexion réussie', 'success');
     }
 
-    // ============ UI ============
     updateUI(isLoggedIn) {
         const loginBtn = document.getElementById('loginBtn');
         const registerBtn = document.getElementById('registerBtn');
@@ -327,12 +288,10 @@ class Auth {
         if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'inline-flex';
         if (registerBtn) registerBtn.style.display = isLoggedIn ? 'none' : 'inline-flex';
         if (logoutBtn) logoutBtn.style.display = isLoggedIn ? 'inline-flex' : 'none';
-
         if (isLoggedIn && window.app) window.app.loadUserData();
         else if (!isLoggedIn && window.app) window.app.resetProfile();
     }
 
-    // ============ TOAST ============
     showToast(message, type = 'info') {
         const toast = document.getElementById('toast');
         if (!toast) { console.log(`[${type}] ${message}`); return; }
@@ -343,23 +302,8 @@ class Auth {
         clearTimeout(this._toastTimer);
         this._toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
     }
-
-    // ============ DIAGNOSTIC MOBILE ============
-    logDiagnostic() {
-        const info = {
-            'Appareil': this.isMobile ? '📱 Mobile' : '💻 Desktop',
-            'Écran': `${screen.width}×${screen.height}`,
-            'localStorage': this.storageAvailable ? '✅ OK' : '❌ Bloqué',
-            'Service Worker': 'serviceWorker' in navigator ? '✅' : '❌',
-            'Touch events': 'ontouchstart' in window ? '✅' : '⚠️',
-            'Backend API': 'Aucun (mode simulation)'
-        };
-        console.log('%c📱 DIAGNOSTIC Famille N\'VEKOUNOU', 'background:#8B0000;color:white;padding:6px 12px;font-size:14px;border-radius:6px;');
-        console.table(info);
-    }
 }
 
-// ============ LANCEMENT ============
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => { window.auth = new Auth(); });
 } else {
